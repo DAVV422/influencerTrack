@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "influencer-1",
+      "description": "Profile picture of Elena Rodriguez",
+      "imageUrl": "https://images.unsplash.com/photo-1598625873873-52f9aefd7d9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzYzMTc1NDAwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman smiling"
+    },
+    {
+      "id": "influencer-2",
+      "description": "Profile picture of Marcus Chen",
+      "imageUrl": "https://images.unsplash.com/photo-1686692977348-020e769fc836?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYW4lMjB1cmJhbnxlbnwwfHx8fDE3NjMxODc5Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man urban"
+    },
+    {
+      "id": "influencer-3",
+      "description": "Profile picture of Sophie Dubois",
+      "imageUrl": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3b21hbiUyMGZhc2hpb258ZW58MHx8fHwxNzYzMjEwNDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman fashion"
+    },
+    {
+      "id": "influencer-4",
+      "description": "Profile picture of Kenji Tanaka",
+      "imageUrl": "https://images.unsplash.com/photo-1633381638831-0ced80e2fee4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYW4lMjB0ZWNofGVufDB8fHx8MTc2MzEyNzgxNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man tech"
+    },
+    {
+      "id": "influencer-5",
+      "description": "Profile picture of Chloe Kim",
+      "imageUrl": "https://images.unsplash.com/photo-1620862657760-72a639a2daef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3b21hbiUyMGZpdG5lc3N8ZW58MHx8fHwxNzYzMjI5ODYyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman fitness"
+    },
+    {
+      "id": "influencer-6",
+      "description": "Profile picture of Liam O'Connell",
+      "imageUrl": "https://images.unsplash.com/photo-1483444308400-fb9510501d23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBuYXR1cmV8ZW58MHx8fHwxNzYzMTc2MzM2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man nature"
+    }
+  ]
 }
