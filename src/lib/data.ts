@@ -25,11 +25,14 @@ export const getInfluencersByCampaignId = (id: string) => {
   return campaign.influencerIds.map(id => getInfluencerById(id)).filter((i): i is Influencer => !!i);
 }
 
-export const addInfluencerToCampaign = (campaignId: string, influencerId: string) => {
+export const addInfluencersToCampaign = (campaignId: string, influencerIds: string[]) => {
   const campaign = getCampaignById(campaignId);
-  if (campaign && !campaign.influencerIds.includes(influencerId)) {
-    campaign.influencerIds.push(influencerId);
-    
+  if (campaign) {
+    influencerIds.forEach(influencerId => {
+      if (!campaign.influencerIds.includes(influencerId)) {
+        campaign.influencerIds.push(influencerId);
+      }
+    });
     // In a real DB, you'd update the campaign record.
     // Here we're updating the in-memory array.
     campaigns = campaigns.map(c => c.id === campaignId ? campaign : c);

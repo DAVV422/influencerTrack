@@ -17,13 +17,13 @@ import {
   getCampaignById,
   getInfluencersByCampaignId,
   getPublications,
-  addInfluencerToCampaign,
+  addInfluencersToCampaign,
   getInfluencers,
 } from '@/lib/data';
 import Image from 'next/image';
 import { ArrowLeft, PlusCircle } from 'lucide-react';
 import type { Influencer } from '@/lib/types';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { AddInfluencerToCampaignModal } from './components/add-influencer-to-campaign-modal';
 
 function getInfluencerStats(influencerId: string, campaignId: string) {
@@ -58,21 +58,24 @@ export default function CampaignDetailPage({
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [campaignInfluencers, setCampaignInfluencers] = useState<Influencer[]>(
-    getInfluencersByCampaignId(params.id)
+    () => getInfluencersByCampaignId(params.id)
   );
 
   if (!campaign) {
     notFound();
   }
 
-  const handleAddInfluencer = (influencerId: string) => {
-    addInfluencerToCampaign(campaign.id, influencerId);
+  const handleAddInfluencers = (influencerIds: string[]) => {
+    addInfluencersToCampaign(campaign.id, influencerIds);
     setCampaignInfluencers(getInfluencersByCampaignId(params.id));
   };
   
-  const availableInfluencers = allInfluencers.filter(
-    (inf) => !campaign.influencerIds.includes(inf.id)
-  );
+  const availableInfluencers = useMemo(() => {
+    const campaignInfluencerIds = new Set(campaignInfluencers.map(i => i.id));
+    return allInfluencers.filter(
+      (inf) => !campaignInfluencerIds.has(inf.id)
+    );
+  }, [allInfluencers, campaignInfluencers]);
 
   return (
     <div className="space-y-6">
@@ -141,7 +144,7 @@ export default function CampaignDetailPage({
       <AddInfluencerToCampaignModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onAddInfluencer={handleAddInfluencer}
+        onAddInfluencers={handleAddInfluencers}
         influencers={availableInfluencers}
       />
     </div>
