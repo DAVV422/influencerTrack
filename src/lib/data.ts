@@ -12,6 +12,7 @@ let publications: Publication[] = allPublications;
 // Helper functions to get data
 export const getCampaigns = () => campaigns;
 export const getInfluencers = () => influencers;
+export const getPublications = () => publications;
 
 export const getCampaignById = (id: string) => campaigns.find((c) => c.id === id);
 export const getInfluencerById = (id: string) => influencers.find((i) => i.id === id);

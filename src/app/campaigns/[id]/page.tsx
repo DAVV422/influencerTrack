@@ -16,7 +16,7 @@ import { PageHeader } from '@/components/page-header';
 import {
   getCampaignById,
   getInfluencersByCampaignId,
-  publications as allPublications,
+  getPublications,
   addInfluencerToCampaign,
   getInfluencers,
 } from '@/lib/data';
@@ -27,6 +27,7 @@ import { useState } from 'react';
 import { AddInfluencerToCampaignModal } from './components/add-influencer-to-campaign-modal';
 
 function getInfluencerStats(influencerId: string, campaignId: string) {
+  const allPublications = getPublications();
   const influencerPublications = allPublications.filter(
     (p) => p.influencerId === influencerId && p.campaignId === campaignId
   );
