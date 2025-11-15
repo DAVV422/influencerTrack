@@ -10,7 +10,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/page-header';
-import { campaigns, influencers } from '@/lib/data';
+import { getCampaigns } from '@/lib/data';
 import { Instagram, Facebook } from 'lucide-react';
 import { TikTokIcon } from '@/components/icons/tiktok-icon';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +22,7 @@ const platformIcons = {
 };
 
 export default function CampaignsPage() {
+    const campaigns = getCampaigns();
   return (
     <div className="space-y-6">
       <PageHeader title="Campaigns" action={<Button>Create Campaign</Button>} />

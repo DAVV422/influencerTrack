@@ -14,6 +14,8 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import type { Influencer } from '@/lib/types';
+import { addInfluencer as saveInfluencer } from '@/lib/data';
+
 
 interface AddInfluencerModalProps {
   open: boolean;
@@ -54,7 +56,9 @@ export function AddInfluencerModal({
       reach: parseFloat((Math.random() * 15).toFixed(1)),
     };
 
+    saveInfluencer(newInfluencer);
     onAddInfluencer(newInfluencer);
+
     toast({
       title: 'Success!',
       description: `${name} has been added to the directory.`,

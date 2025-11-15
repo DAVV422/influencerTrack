@@ -1,0 +1,79 @@
+[
+  {
+    "id": "1",
+    "name": "Elena Rodriguez",
+    "imageUrl": "https://picsum.photos/seed/1/200/200",
+    "socials": {
+      "instagram": "https://instagram.com/elena_styles",
+      "tiktok": "https://tiktok.com/@elena_styles"
+    },
+    "followers": 1200000,
+    "likes": 5400000,
+    "posts": 350,
+    "reach": 7.8
+  },
+  {
+    "id": "2",
+    "name": "Marcus Chen",
+    "imageUrl": "https://picsum.photos/seed/2/200/200",
+    "socials": {
+      "instagram": "https://instagram.com/marcus.travels",
+      "facebook": "https://facebook.com/marcus.travels"
+    },
+    "followers": 850000,
+    "likes": 3200000,
+    "posts": 210,
+    "reach": 6.5
+  },
+  {
+    "id": "3",
+    "name": "Sophie Dubois",
+    "imageUrl": "https://picsum.photos/seed/3/200/200",
+    "socials": {
+      "tiktok": "https://tiktok.com/@sophie.foodie"
+    },
+    "followers": 2500000,
+    "likes": 12000000,
+    "posts": 500,
+    "reach": 12.3
+  },
+  {
+    "id": "4",
+    "name": "Kenji Tanaka",
+    "imageUrl": "https://picsum.photos/seed/4/200/200",
+    "socials": {
+      "instagram": "https://instagram.com/kenji.tech",
+      "facebook": "https://facebook.com/kenji.tech"
+    },
+    "followers": 500000,
+    "likes": 1800000,
+    "posts": 150,
+    "reach": 5.2
+  },
+  {
+    "id": "5",
+    "name": "Chloe Kim",
+    "imageUrl": "https://picsum.photos/seed/5/200/200",
+    "socials": {
+      "instagram": "https://instagram.com/chloe.fit",
+      "tiktok": "https://tiktok.com/@chloe.fit",
+      "facebook": "https://facebook.com/chloe.fit"
+    },
+    "followers": 1800000,
+    "likes": 7800000,
+    "posts": 420,
+    "reach": 9.1
+  },
+  {
+    "id": "6",
+    "name": "Liam O'Connell",
+    "imageUrl": "https://picsum.photos/seed/6/200/200",
+    "socials": {
+      "instagram": "https://instagram.com/liam.explores"
+    },
+    "followers": 650000,
+    "likes": 2100000,
+    "posts": 180,
+    "reach": 4.9
+  }
+]

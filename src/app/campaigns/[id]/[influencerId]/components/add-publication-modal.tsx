@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import type { Publication } from '@/lib/types';
+import { addPublication } from '@/lib/data';
 
 interface AddPublicationModalProps {
   open: boolean;
@@ -55,7 +56,9 @@ export function AddPublicationModal({
       influencerId,
     };
 
+    addPublication(newPublication);
     onAddPublication(newPublication);
+
     toast({
       title: 'Publication added!',
       description: 'Metrics have been fetched and added to the list.',

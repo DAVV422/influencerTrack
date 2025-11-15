@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -14,14 +16,18 @@ import { PageHeader } from '@/components/page-header';
 import {
   getCampaignById,
   getInfluencersByCampaignId,
-  publications,
+  publications as allPublications,
+  addInfluencerToCampaign,
+  getInfluencers,
 } from '@/lib/data';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PlusCircle } from 'lucide-react';
 import type { Influencer } from '@/lib/types';
+import { useState } from 'react';
+import { AddInfluencerToCampaignModal } from './components/add-influencer-to-campaign-modal';
 
 function getInfluencerStats(influencerId: string, campaignId: string) {
-  const influencerPublications = publications.filter(
+  const influencerPublications = allPublications.filter(
     (p) => p.influencerId === influencerId && p.campaignId === campaignId
   );
   return influencerPublications.reduce(
@@ -31,7 +37,7 @@ function getInfluencerStats(influencerId: string, campaignId: string) {
       acc.shares += pub.shares;
       return acc;
     },
-    { likes: 0, comments: 0, shares: 0 }
+    { likes: 0, comments: 0, shares: 0, publications: influencerPublications.length }
   );
 }
 
@@ -47,11 +53,25 @@ export default function CampaignDetailPage({
   params: { id: string };
 }) {
   const campaign = getCampaignById(params.id);
+  const allInfluencers = getInfluencers();
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [campaignInfluencers, setCampaignInfluencers] = useState<Influencer[]>(
+    getInfluencersByCampaignId(params.id)
+  );
+
   if (!campaign) {
     notFound();
   }
 
-  const campaignInfluencers = getInfluencersByCampaignId(params.id);
+  const handleAddInfluencer = (influencerId: string) => {
+    addInfluencerToCampaign(campaign.id, influencerId);
+    setCampaignInfluencers(getInfluencersByCampaignId(params.id));
+  };
+  
+  const availableInfluencers = allInfluencers.filter(
+    (inf) => !campaign.influencerIds.includes(inf.id)
+  );
 
   return (
     <div className="space-y-6">
@@ -61,7 +81,15 @@ export default function CampaignDetailPage({
           Back to Campaigns
         </Link>
       </Button>
-      <PageHeader title={campaign.name} />
+      <PageHeader
+        title={campaign.name}
+        action={
+          <Button onClick={() => setIsModalOpen(true)}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Influencer
+          </Button>
+        }
+      />
       <Card>
         <CardContent className="p-0">
           <Table>
@@ -109,6 +137,12 @@ export default function CampaignDetailPage({
           </Table>
         </CardContent>
       </Card>
+      <AddInfluencerToCampaignModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onAddInfluencer={handleAddInfluencer}
+        influencers={availableInfluencers}
+      />
     </div>
   );
 }
