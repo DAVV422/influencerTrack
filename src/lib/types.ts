@@ -28,6 +28,13 @@ export interface Publication {
 export interface Campaign {
   id: string;
   name: string;
+  // Nuevos campos
+  description: string;
+  startDate: string; // Usamos string porque el input[type="date"] devuelve una cadena
+  endDate: string;   // Usamos string porque el input[type="date"] devuelve una cadena
+  createdAt: string; // Añadido para seguir la lógica de la función createCampaign
+
+  // Campos existentes
   socials: ('instagram' | 'tiktok' | 'facebook')[];
   influencerIds: string[];
 }
