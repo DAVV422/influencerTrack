@@ -12,17 +12,22 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-// Asegúrate de que este hook esté disponible en tu proyecto
 import { useToast } from '@/hooks/use-toast'; 
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
-import type { SocialPlatform, NewCampaign, CreateCampaignModalProps } from './create-campaign-modal.type'; // Ajusta la ruta
+import type { SocialPlatform, NewCampaign, CreateCampaignModalProps } from './create-campaign-modal.type';
+import type { Campaign } from '@/lib/types';
 
-// Simulación de la función de guardar campaña para que el código compile
-const saveCampaign = (campaign: NewCampaign) => {
-    console.log('Campaign saved:', campaign);
+// Función para guardar campaña vía API
+const saveCampaign = async (campaign: Campaign) => {
+  const res = await fetch('/api/campaigns', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(campaign),
+  });
+  if (!res.ok) throw new Error('Error saving campaign');
+  return res.json();
 };
-
 
 export function CreateCampaignModal({
   open,
@@ -32,81 +37,72 @@ export function CreateCampaignModal({
 }: CreateCampaignModalProps) {
   const { toast } = useToast();
   const [name, setName] = useState('');
-  const [description, setDescription] = useState(''); // <-- Nuevo estado
-  const [startDate, setStartDate] = useState('');     // <-- Nuevo estado
+  const [description, setDescription] = useState('');
+  const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  // Estado para manejar las plataformas seleccionadas
   const [selectedSocials, setSelectedSocials] = useState<SocialPlatform[]>([]);
-
   const availableSocials: SocialPlatform[] = ['instagram', 'tiktok', 'facebook'];
 
   const handleCheckboxChange = (platform: SocialPlatform, isChecked: boolean) => {
-    setSelectedSocials((prev) => 
-      isChecked
-        ? [...prev, platform] // Añadir si está marcado
-        : prev.filter((s) => s !== platform) // Quitar si está desmarcado
+    setSelectedSocials(prev =>
+      isChecked ? [...prev, platform] : prev.filter(s => s !== platform)
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) {
-      toast({
-        title: 'Error',
-        description: 'Please enter a name for the campaign.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Ingrese el nombre de la campaña.', variant: 'destructive' });
       return;
     }
     if (!description.trim()) {
-      toast({ title: 'Error', description: 'Please enter a description for the campaign.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Ingrese la descripción de la campaña.', variant: 'destructive' });
       return;
     }
     if (!startDate || !endDate) {
-      toast({ title: 'Error', description: 'Please select both start and end dates.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Seleccione fecha de inicio y fin.', variant: 'destructive' });
       return;
     }
     if (new Date(startDate) > new Date(endDate)) {
-      toast({ title: 'Error', description: 'The start date cannot be after the end date.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'La fecha de inicio no puede ser posterior a la fecha fin.', variant: 'destructive' });
       return;
     }
     if (selectedSocials.length === 0) {
-      toast({
-        title: 'Error',
-        description: 'Please select at least one social network.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Error', description: 'Seleccione al menos una red social.', variant: 'destructive' });
       return;
     }
 
     const newCampaignId = nextIdGenerator();
 
-    // Simulamos la creación de la nueva campaña
-    const newCampaign: NewCampaign = {
+    const newCampaign: Campaign = {
       id: newCampaignId,
       name,
-      description, // <-- Añadido
-      startDate,   // <-- Añadido
+      description,
+      startDate,
       endDate,
       socials: selectedSocials,
-      influencerIds: [], // Inicialmente vacía
+      influencerIds: [],
     };
 
-    // saveCampaign(newCampaign); // Descomentar en tu app real
+    try {
+      const savedCampaign = await saveCampaign(newCampaign);
+      onAddCampaign(savedCampaign);
 
-    onAddCampaign(newCampaign);
+      toast({
+        title: 'Éxito!',
+        description: `Campaña "${name}" creada correctamente.`,
+      });
 
-    toast({
-      title: 'Success!',
-      description: `Campaign "${name}" has been created.`,
-    });
-    
-    onOpenChange(false);
-    // Reset form
-    setName('');
-    setDescription(''); // Reset
-    setStartDate('');   // Reset
-    setEndDate('');
-    setSelectedSocials([]);
+      onOpenChange(false);
+      // Reset form
+      setName('');
+      setDescription('');
+      setStartDate('');
+      setEndDate('');
+      setSelectedSocials([]);
+    } catch (error) {
+      toast({ title: 'Error', description: 'No se pudo guardar la campaña.', variant: 'destructive' });
+      console.error(error);
+    }
   };
 
   return (
@@ -115,15 +111,13 @@ export function CreateCampaignModal({
         <DialogHeader>
           <DialogTitle>Crear Nueva Campaña</DialogTitle>
           <DialogDescription>
-            Ingrese el nombre de la campaña y seleccione las redes sociales para la campaña.
+            Ingrese el nombre, descripción y seleccione las redes sociales para la campaña.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* Campo Nombre de Campaña */}
+          {/* Nombre */}
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="campaignName" className="text-right">
-              Nombre
-            </Label>
+            <Label htmlFor="campaignName" className="text-right">Nombre</Label>
             <Input 
               id="campaignName" 
               value={name} 
@@ -132,7 +126,7 @@ export function CreateCampaignModal({
               placeholder="Summer Launch 2026"
             />
           </div>
-
+          {/* Descripción */}
           <div className="grid grid-cols-4 items-start gap-4">
             <Label htmlFor="description" className="text-right pt-2">Descripción</Label>
             <Textarea 
@@ -140,11 +134,10 @@ export function CreateCampaignModal({
               value={description} 
               onChange={e => setDescription(e.target.value)} 
               className="col-span-3 min-h-[80px]" 
-              placeholder="Brief description of the campaign goals and content."
+              placeholder="Descripción de la campaña"
             />
           </div>
-
-          {/* Campos Fechas */}
+          {/* Fechas */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="startDate" className="text-right">Fecha Inicio</Label>
             <Input 
@@ -165,24 +158,18 @@ export function CreateCampaignModal({
               className="col-span-3" 
             />
           </div>
-
-          {/* Selección de Redes Sociales */}
+          {/* Redes Sociales */}
           <div className="grid grid-cols-4 items-start gap-4 pt-2">
-            <Label className="text-right pt-2">
-              Redes Sociales
-            </Label>
+            <Label className="text-right pt-2">Redes Sociales</Label>
             <div className="col-span-3 space-y-3">
-              {availableSocials.map((platform) => (
+              {availableSocials.map(platform => (
                 <div key={platform} className="flex items-center space-x-2">
                   <Checkbox 
                     id={platform} 
                     checked={selectedSocials.includes(platform)}
                     onCheckedChange={(checked) => handleCheckboxChange(platform, checked as boolean)}
                   />
-                  <label
-                    htmlFor={platform}
-                    className="text-sm font-medium capitalize leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+                  <label htmlFor={platform} className="text-sm font-medium capitalize leading-none">
                     {platform}
                   </label>
                 </div>
@@ -191,9 +178,7 @@ export function CreateCampaignModal({
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            Crear Campaña
-          </Button>
+          <Button type="submit" onClick={handleSubmit}>Crear Campaña</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

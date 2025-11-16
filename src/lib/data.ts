@@ -1,48 +1,102 @@
 import type { Influencer, Campaign, Publication } from './types';
-import allInfluencers from '@/data/influencers.json';
-import allCampaigns from '@/data/campaigns.json';
-import allPublications from '@/data/publications.json';
 
-// State management for demo purposes
-let influencers: Influencer[] = allInfluencers;
-let campaigns: Campaign[] = allCampaigns as Campaign[];
-let publications: Publication[] = allPublications;
-
-
-// Helper functions to get data
-export const getCampaigns = () => campaigns;
-export const getInfluencers = () => influencers;
-export const getPublications = () => publications;
-
-export const getCampaignById = (id: string) => campaigns.find((c) => c.id === id);
-export const getInfluencerById = (id: string) => influencers.find((i) => i.id === id);
-export const getPublicationsByCampaignAndInfluencer = (campaignId: string, influencerId: string) =>
-  publications.filter((p) => p.campaignId === campaignId && p.influencerId === influencerId);
-
-export const getInfluencersByCampaignId = (id: string) => {
-  const campaign = getCampaignById(id);
-  if (!campaign) return [];
-  return campaign.influencerIds.map(id => getInfluencerById(id)).filter((i): i is Influencer => !!i);
+// Influencers
+export const getInfluencers = async (): Promise<Influencer[]> => {
+  const res = await fetch('/api/influencers');
+  return res.json();
 }
 
-export const addInfluencersToCampaign = (campaignId: string, influencerIds: string[]) => {
-  const campaign = getCampaignById(campaignId);
-  if (campaign) {
-    influencerIds.forEach(influencerId => {
-      if (!campaign.influencerIds.includes(influencerId)) {
-        campaign.influencerIds.push(influencerId);
-      }
-    });
-    campaigns = campaigns.map(c => c.id === campaignId ? campaign : c);
-    return true;
-  }
-  return false;
+export const getInfluencerById = async (id: string): Promise<Influencer | undefined> => {
+  const influencers = await getInfluencers();
+  return influencers.find(i => i.id === id);
 }
 
-export const addPublication = (publication: Publication) => {
-    publications = [publication, ...publications];
+export const addInfluencer = async (influencer: Influencer) => {
+  const res = await fetch('/api/influencers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(influencer),
+  });
+  return res.json();
 }
 
-export const addInfluencer = (influencer: Influencer) => {
-    influencers = [influencer, ...influencers];
+export const updateInfluencer = async (id: string, data: Partial<Influencer>) => {
+  const res = await fetch(`/api/influencers/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return res.json();
 }
+
+
+// Campaigns
+export const getCampaigns = async (): Promise<Campaign[]> => {
+  const res = await fetch('/api/campaigns');
+  return res.json();
+}
+
+export const getCampaignById = async (id: string): Promise<Campaign | undefined> => {
+  const campaigns = await getCampaigns();
+  return campaigns.find(c => c.id === id);
+}
+
+export const addCampaign = async (campaign: Campaign) => {
+  const res = await fetch('/api/campaigns', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(campaign),
+  });
+  return res.json();
+}
+
+export const updateCampaign = async (id: string, data: Partial<Campaign>) => {
+  const res = await fetch(`/api/campaigns/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
+// Agregar influencers a una campaña
+export const addInfluencersToCampaign = async (campaignId: string, influencerIds: string[]) => {
+  const campaign = await getCampaignById(campaignId);
+  if (!campaign) return false;
+
+  const updatedIds = Array.from(new Set([...campaign.influencerIds, ...influencerIds]));
+  return updateCampaign(campaignId, { influencerIds: updatedIds });
+}
+
+
+
+// Publications
+export const getPublications = async (): Promise<Publication[]> => {
+  const res = await fetch('/api/publications');
+  return res.json();
+}
+
+export const getPublicationsByCampaignAndInfluencer = async (campaignId: string, influencerId: string) => {
+  const publications = await getPublications();
+  return publications.filter(p => p.campaignId === campaignId && p.influencerId === influencerId);
+}
+
+export const addPublication = async (publication: Publication) => {
+  const res = await fetch('/api/publications', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(publication),
+  });
+  return res.json();
+}
+
+export const updatePublication = async (id: string, data: Partial<Publication>) => {
+  const res = await fetch(`/api/publications/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
+

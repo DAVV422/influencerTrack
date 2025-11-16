@@ -10,6 +10,7 @@ export interface Influencer {
   imageUrl: string;
   socials: Socials;
   followers: number;
+  clic_descargas: object;
   likes: number;
   posts: number;
   reach: number;
@@ -26,13 +27,13 @@ export interface Publication {
 }
 
 export interface Campaign {
-  id: string;
+  id: number;
   name: string;
   // Nuevos campos
   description: string;
   startDate: string; // Usamos string porque el input[type="date"] devuelve una cadena
   endDate: string;   // Usamos string porque el input[type="date"] devuelve una cadena
-  createdAt: string; // Añadido para seguir la lógica de la función createCampaign
+  // createdAt: string; // Añadido para seguir la lógica de la función createCampaign
 
   // Campos existentes
   socials: ('instagram' | 'tiktok' | 'facebook')[];

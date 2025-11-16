@@ -1,5 +1,7 @@
 // CreateCampaignModal.types.ts (o dentro de tu types.ts)
 
+import { Campaign } from "@/lib/types";
+
 // Definiciones de tipos para el modal
 
 // Los "socials" disponibles para la campaña
@@ -20,6 +22,6 @@ export interface NewCampaign {
 export interface CreateCampaignModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddCampaign: (campaign: NewCampaign) => void;
+  onAddCampaign: (campaign: Campaign) => void;
   nextIdGenerator: () => number;
 }
