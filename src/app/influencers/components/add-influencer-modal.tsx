@@ -1,116 +1,318 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
 import type { Influencer } from '@/lib/types';
-import { addInfluencer as saveInfluencer } from '@/lib/data';
-
-
-interface AddInfluencerModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAddInfluencer: (influencer: Influencer) => void;
-}
+import { v4 as uuid } from 'uuid';
 
 export function AddInfluencerModal({
   open,
   onOpenChange,
   onAddInfluencer,
-}: AddInfluencerModalProps) {
-  const { toast } = useToast();
+  mode,
+  initialInfluencer,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAddInfluencer: (inf: Influencer) => void;
+  mode: 'add' | 'edit';
+  initialInfluencer: Influencer | null;
+}) {
   const [name, setName] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [tiktok, setTiktok] = useState('');
-  const [facebook, setFacebook] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [category, setCategory] = useState('Moda');
+  const [imageUrl, setImageUrl] = useState('');
+
+  // Redes sociales
+  const [useInstagram, setUseInstagram] = useState(false);
+  const [useTiktok, setUseTiktok] = useState(false);
+  const [useFacebook, setUseFacebook] = useState(false);
+
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [tiktokUrl, setTiktokUrl] = useState('');
+  const [facebookUrl, setFacebookUrl] = useState('');
+
+  // COSTOS
+  const [instagramCost, setInstagramCost] = useState('');
+  const [tiktokCost, setTiktokCost] = useState('');
+  const [facebookCost, setFacebookCost] = useState('');
+
+  // Totales globales
+  const [followers, setFollowers] = useState<number>(0);
+  const [likes, setLikes] = useState<number>(0);
+  const [posts, setPosts] = useState<number>(0);
+  const [reach, setReach] = useState<number>(0);
+
+  useEffect(() => {
+    if (open && mode === 'edit' && initialInfluencer) {
+      setName(initialInfluencer.name);
+      setNickname(initialInfluencer.nickname || '');
+      setEmail(initialInfluencer.email || '');
+      setPhone(initialInfluencer.phone || '');
+      setCategory(initialInfluencer.category || 'Moda');
+      setImageUrl(initialInfluencer.imageUrl);
+
+      // Redes sociales previas
+      setUseInstagram(!!initialInfluencer.socials.instagram);
+      setUseTiktok(!!initialInfluencer.socials.tiktok);
+      setUseFacebook(!!initialInfluencer.socials.facebook);
+
+      setInstagramUrl(initialInfluencer.socials.instagram || '');
+      setTiktokUrl(initialInfluencer.socials.tiktok || '');
+      setFacebookUrl(initialInfluencer.socials.facebook || '');
+
+      // Costos previos
+      setInstagramCost(initialInfluencer.instagramCost?.toString() || '');
+      setTiktokCost(initialInfluencer.tiktokCost?.toString() || '');
+      setFacebookCost(initialInfluencer.facebookCost?.toString() || '');
+
+      setFollowers(initialInfluencer.followers);
+      setLikes(initialInfluencer.likes);
+      setPosts(initialInfluencer.posts);
+      setReach(initialInfluencer.reach);
+    }
+
+    if (open && mode === 'add') {
+      setName('');
+      setNickname('');
+      setEmail('');
+      setPhone('');
+      setCategory('Moda');
+      setImageUrl('');
+
+      setUseInstagram(false);
+      setUseTiktok(false);
+      setUseFacebook(false);
+
+      setInstagramUrl('');
+      setTiktokUrl('');
+      setFacebookUrl('');
+
+      setInstagramCost('');
+      setTiktokCost('');
+      setFacebookCost('');
+
+      setFollowers(0);
+      setLikes(0);
+      setPosts(0);
+      setReach(0);
+    }
+  }, [open, mode, initialInfluencer]);
 
   const handleSubmit = () => {
-    if (!name) {
-      toast({
-        title: 'Error',
-        description: 'Please enter a name for the influencer.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    // In a real app, this would call a backend service
-    // to fetch influencer data. Here we simulate it.
-    const newInfluencer: Influencer = {
-      id: Date.now().toString(),
+    const influencer: Influencer = {
+      id: initialInfluencer?.id || uuid(),
       name,
-      imageUrl: `https://picsum.photos/seed/${Date.now()}/200/200`,
-      socials: { instagram, tiktok, facebook },
-      followers: Math.floor(Math.random() * 1000000),
-      likes: Math.floor(Math.random() * 5000000),
-      posts: Math.floor(Math.random() * 500),
-      reach: parseFloat((Math.random() * 15).toFixed(1)),
+      nickname,
+      email,
+      phone,
+      category,
+      imageUrl,
+      socials: {
+        instagram: useInstagram ? instagramUrl : undefined,
+        tiktok: useTiktok ? tiktokUrl : undefined,
+        facebook: useFacebook ? facebookUrl : undefined,
+      },
+
+      followers,
+      likes,
+      posts,
+      reach,
+
+      instagramCost: useInstagram ? Number(instagramCost) : undefined,
+      tiktokCost: useTiktok ? Number(tiktokCost) : undefined,
+      facebookCost: useFacebook ? Number(facebookCost) : undefined,
     };
 
-    saveInfluencer(newInfluencer);
-    onAddInfluencer(newInfluencer);
-
-    toast({
-      title: 'Success!',
-      description: `${name} has been added to the directory.`,
-    });
+    onAddInfluencer(influencer);
     onOpenChange(false);
-    // Reset form
-    setName('');
-    setInstagram('');
-    setTiktok('');
-    setFacebook('');
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Add New Influencer</DialogTitle>
+          <DialogTitle>
+            {mode === 'add' ? 'Agregar nuevo influencer' : 'Editar influencer'}
+          </DialogTitle>
           <DialogDescription>
-            Enter the influencer's details below. Adding a profile URL will help fetch their data automatically.
+            Completa los datos del influencer y asigna costos por red social.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value={name} onChange={e => setName(e.target.value)} className="col-span-3" />
+
+        <div className="space-y-4">
+
+          {/* Nombre */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label>Nombre</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+
+            <div>
+              <Label>Usuario / Nickname</Label>
+              <Input value={nickname} onChange={(e) => setNickname(e.target.value)} />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="instagram" className="text-right">
-              Instagram URL
-            </Label>
-            <Input id="instagram" value={instagram} onChange={e => setInstagram(e.target.value)} className="col-span-3" placeholder="https://instagram.com/username" />
+
+          {/* Email y teléfono */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label>Email</Label>
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div>
+              <Label>Teléfono</Label>
+              <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tiktok" className="text-right">
-              TikTok URL
-            </Label>
-            <Input id="tiktok" value={tiktok} onChange={e => setTiktok(e.target.value)} className="col-span-3" placeholder="https://tiktok.com/@username" />
+
+          {/* Categoría */}
+          <div>
+            <Label>Categoría</Label>
+            <Input value={category} onChange={(e) => setCategory(e.target.value)} />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="facebook" className="text-right">
-              Facebook URL
-            </Label>
-            <Input id="facebook" value={facebook} onChange={e => setFacebook(e.target.value)} className="col-span-3" placeholder="https://facebook.com/username" />
+
+          {/* Imagen */}
+          <div>
+            <Label>URL de imagen</Label>
+            <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+          </div>
+
+          {/* Redes sociales */}
+          <div className="space-y-4 pt-2">
+            <Label className="font-semibold">Redes sociales</Label>
+
+            {/* INSTAGRAM */}
+            <div>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={useInstagram}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setUseInstagram(checked);
+                    if (!checked) {
+                      setInstagramUrl('');
+                      setInstagramCost('');
+                    }
+                  }}
+                />
+                Instagram
+              </label>
+
+              {useInstagram && (
+                <div className="flex gap-2 mt-1">
+                  <Input
+                    placeholder="URL Instagram"
+                    value={instagramUrl}
+                    onChange={(e) => setInstagramUrl(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Input
+                    placeholder="Costo IG"
+                    type="number"
+                    value={instagramCost}
+                    onChange={(e) => setInstagramCost(e.target.value)}
+                    className="w-28"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* TIKTOK */}
+            <div>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={useTiktok}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setUseTiktok(checked);
+                    if (!checked) {
+                      setTiktokUrl('');
+                      setTiktokCost('');
+                    }
+                  }}
+                />
+                TikTok
+              </label>
+
+              {useTiktok && (
+                <div className="flex gap-2 mt-1">
+                  <Input
+                    placeholder="URL TikTok"
+                    value={tiktokUrl}
+                    onChange={(e) => setTiktokUrl(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Input
+                    placeholder="Costo TikTok"
+                    type="number"
+                    value={tiktokCost}
+                    onChange={(e) => setTiktokCost(e.target.value)}
+                    className="w-28"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* FACEBOOK */}
+            <div>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={useFacebook}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setUseFacebook(checked);
+                    if (!checked) {
+                      setFacebookUrl('');
+                      setFacebookCost('');
+                    }
+                  }}
+                />
+                Facebook
+              </label>
+
+              {useFacebook && (
+                <div className="flex gap-2 mt-1">
+                  <Input
+                    placeholder="URL Facebook"
+                    value={facebookUrl}
+                    onChange={(e) => setFacebookUrl(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Input
+                    placeholder="Costo FB"
+                    type="number"
+                    value={facebookCost}
+                    onChange={(e) => setFacebookCost(e.target.value)}
+                    className="w-28"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* SUBMIT */}
+          <div className="pt-4 flex justify-end">
+            <Button onClick={handleSubmit}>
+              {mode === 'add' ? 'Agregar influencer' : 'Guardar cambios'}
+            </Button>
           </div>
         </div>
-        <DialogFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            Add Influencer
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

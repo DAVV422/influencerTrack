@@ -1,3 +1,4 @@
+//influencers/pagetsx
 import { getInfluencers } from '@/lib/data';
 import { InfluencerList } from './components/influencer-list';
 

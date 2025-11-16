@@ -48,7 +48,7 @@ export function SidebarLayout({ children }: { children: React.ReactNode }) {
               </Link>
             </Button>
             <h2 className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">
-              InfluenceTrack
+              METRIKENOS
             </h2>
           </div>
         </SidebarHeader>

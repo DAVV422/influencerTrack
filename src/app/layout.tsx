@@ -4,7 +4,7 @@ import { SidebarLayout } from '@/components/layout/sidebar-layout';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'InfluenceTrack',
+  title: 'METRIKENOS',
   description: 'Track your influencer marketing campaigns with ease.',
 };
 
