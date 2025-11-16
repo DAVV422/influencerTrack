@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import * as React from "react"
 import { Check, ChevronsUpDown, X } from "lucide-react"
@@ -101,6 +101,7 @@ export function MultiSelectCombobox({
                 return (
                   <CommandItem
                     key={option.value}
+                    value={option.value}
                     onSelect={() => {
                       if (isSelected) {
                         handleDeselect(option.value)

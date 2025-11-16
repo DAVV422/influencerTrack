@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardContent,
@@ -12,11 +14,52 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
 import { EngagementChart } from './components/engagement-chart';
+import * as XLSX from 'xlsx';
+import { FileSpreadsheet } from 'lucide-react';
+
+import influencersData from '@/data/influencers.json';
+import publicationsData from '@/data/publications.json';
+import { Button } from '@/components/ui/button';
+import { Influencer } from '@/lib/types';
+
 
 export default function Dashboard() {
+
+  const exportToExcel = () => {
+    // Combinar influencers y publicaciones
+    const rows = publicationsData.map(pub => {
+      const influencer: Influencer = influencersData.find(i => i.id === pub.influencerId);
+      return {
+        nombre: influencer?.name || '',
+        seguidores: influencer?.followers || 0,
+        id_campaña: pub.campaignId,
+        id_publicacion: pub.id,
+        likes: pub.likes,
+        comentarios: pub.comments,
+        shares: pub.shares,
+        saves: pub.saves || 0,
+      };
+    });
+
+    // Crear hoja y libro
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Influencers');
+
+    // Guardar archivo
+    XLSX.writeFile(workbook, 'influencers_report.xlsx');
+  };
+
   return (
     <div className="flex flex-col gap-8">
-      <PageHeader title="Dashboard" />
+      <div className="flex justify-between items-center">
+        <PageHeader title="Dashboard" />
+
+        <Button onClick={exportToExcel} className="flex gap-2" variant="outline">
+          <FileSpreadsheet className="h-4 w-4" />
+          Exportar Excel
+        </Button>
+      </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

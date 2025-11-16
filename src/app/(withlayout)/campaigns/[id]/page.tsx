@@ -73,22 +73,15 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
           getPublications(),
         ]);
 
-        console.log(fetchedCampaign)
-
         if (!fetchedCampaign) {
           notFound();
           return;
         }
 
-        console.log("ingresa");
-        setCampaign(fetchedCampaign);
-        console.log("setCampaign1");
+        setCampaign(fetchedCampaign);        
         setAllInfluencers(fetchedAllInfluencers);
-        console.log("setAll");
         setCampaignInfluencers(fetchedCampaignInfluencers);
-        console.log("setCampaign");
         setAllPublications(fetchedPublications);
-        console.log("termina");
         
       } catch (error) {
         console.error("Error fetching data:", error);

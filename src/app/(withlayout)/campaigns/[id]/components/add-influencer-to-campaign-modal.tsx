@@ -47,7 +47,7 @@ export function AddInfluencerToCampaignModal({
     });
     onOpenChange(false);
     setSelectedInfluencerIds([]);
-  };
+  };  
 
   const comboboxOptions = influencers.map(inf => ({
     value: inf.id,
@@ -55,7 +55,8 @@ export function AddInfluencerToCampaignModal({
   }));
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>      
+
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add Influencers to Campaign</DialogTitle>

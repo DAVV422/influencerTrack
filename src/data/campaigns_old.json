@@ -1,0 +1,121 @@
+[
+  {
+    "id": 9,
+    "name": "prueba",
+    "description": "test p",
+    "startDate": "2025-11-15",
+    "endDate": "2025-11-29",
+    "socials": [
+      "facebook"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": 8,
+    "name": "test",
+    "description": "test",
+    "startDate": "2023-03-02",
+    "endDate": "2025-11-20",
+    "socials": [
+      "instagram",
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": 7,
+    "name": "test3",
+    "description": "testhgkjgh",
+    "startDate": "2025-11-01",
+    "endDate": "2025-11-29",
+    "socials": [
+      "instagram"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": 6,
+    "name": "nueva campaña",
+    "description": "tes test test",
+    "startDate": "2023-04-09",
+    "endDate": "2025-03-31",
+    "socials": [
+      "instagram",
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": 5,
+    "name": "test2",
+    "description": "test guardado",
+    "startDate": "2025-11-08",
+    "endDate": "2025-11-29",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": 4,
+    "name": "test",
+    "description": "test test",
+    "startDate": "2025-11-14",
+    "endDate": "2025-11-29",
+    "socials": [
+      "instagram",
+      "facebook"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "1",
+    "name": "Summer Style 2024",
+    "description": "Campaña de moda veraniega con las últimas tendencias",
+    "startDate": "2024-06-01",
+    "endDate": "2024-08-31",
+    "createdAt": "2024-05-15",
+    "socials": [
+      "instagram",
+      "tiktok"
+    ],
+    "influencerIds": [
+      "1",
+      "3",
+      "5"
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Tech & Travel Gear",
+    "description": "Tecnología y equipamiento esencial para viajeros",
+    "startDate": "2024-07-01",
+    "endDate": "2024-09-30",
+    "createdAt": "2024-06-10",
+    "socials": [
+      "instagram",
+      "facebook"
+    ],
+    "influencerIds": [
+      "2",
+      "4"
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Fitness Challenge",
+    "description": "Reto de fitness para mejorar tu condición física",
+    "startDate": "2024-05-01",
+    "endDate": "2024-06-30",
+    "createdAt": "2024-04-20",
+    "socials": [
+      "instagram",
+      "tiktok",
+      "facebook"
+    ],
+    "influencerIds": [
+      "5",
+      "6"
+    ]
+  }
+]

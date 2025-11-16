@@ -23,6 +23,12 @@ interface AddInfluencerModalProps {
   onAddInfluencer: (influencer: Influencer) => void;
 }
 
+interface ProfileMetrics {
+  followers: number;
+  likes: number;
+  posts: number;
+}
+
 export function AddInfluencerModal({
   open,
   onOpenChange,
@@ -34,41 +40,100 @@ export function AddInfluencerModal({
   const [tiktok, setTiktok] = useState('');
   const [facebook, setFacebook] = useState('');
 
-  const handleSubmit = () => {
-    if (!name) {
-      toast({
-        title: 'Error',
-        description: 'Please enter a name for the influencer.',
-        variant: 'destructive',
-      });
-      return;
+  async function fetchProfileMetrics(profileUrl: string): Promise<ProfileMetrics | null> {
+    const backendUrl = "http://127.0.0.1:8000/metricas/profile"; // tu endpoint del backend
+
+    if (!backendUrl) {
+      console.error("Backend URL no definida.");
+      return null;
     }
-    // In a real app, this would call a backend service
-    // to fetch influencer data. Here we simulate it.
+
+    try {
+      console.log(`Llamando al backend para perfil: ${profileUrl}`);
+
+      const response = await fetch(backendUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: profileUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request falló con status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      return {
+        followers: data.followers || 0,
+        likes: data.likes || 0,
+        posts: data.posts || 0,
+        // añade otros campos si tu backend los devuelve
+      };
+    } catch (error) {
+      console.error("Error obteniendo métricas del perfil:", error);
+      return null;
+    }
+  }
+
+  function estimateReach(followers: number, likes: number, posts: number): number {
+    if (followers === 0 || posts === 0) return 0;
+    const avgLikesPerPost = likes / posts;
+    const engagementRate = (avgLikesPerPost / followers) * 100;
+    const reach = engagementRate * 2; // factor genérico
+    return parseFloat(reach.toFixed(1)); // reach en porcentaje
+  }
+
+  const handleSubmit = async () => {
+  if (!name) {
+    toast({
+      title: "Error",
+      description: "Please enter a name for the influencer.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  // Elegir la URL principal del influencer (Instagram, TikTok, Facebook)
+  const profileUrl = instagram || tiktok || facebook;
+    let metrics = { followers: 0, likes: 0, posts: 0 };
+
+    if (profileUrl) {
+      const fetchedMetrics = await fetchProfileMetrics(profileUrl);
+      if (fetchedMetrics) {
+        metrics = fetchedMetrics;
+      }
+    }
+
+    const reach_influencer = estimateReach(metrics.followers, metrics.likes, metrics.posts);
+
     const newInfluencer: Influencer = {
       id: Date.now().toString(),
       name,
       imageUrl: `https://picsum.photos/seed/${Date.now()}/200/200`,
       socials: { instagram, tiktok, facebook },
-      followers: Math.floor(Math.random() * 1000000),
-      likes: Math.floor(Math.random() * 5000000),
-      posts: Math.floor(Math.random() * 500),
-      reach: parseFloat((Math.random() * 15).toFixed(1)),
+      followers: metrics.followers,
+      likes: metrics.likes,
+      posts: metrics.posts,
+      reach: reach_influencer,
+      clic_descargas: {},
     };
 
     saveInfluencer(newInfluencer);
     onAddInfluencer(newInfluencer);
 
     toast({
-      title: 'Success!',
+      title: "Success!",
       description: `${name} has been added to the directory.`,
     });
     onOpenChange(false);
+
     // Reset form
-    setName('');
-    setInstagram('');
-    setTiktok('');
-    setFacebook('');
+    setName("");
+    setInstagram("");
+    setTiktok("");
+    setFacebook("");
   };
 
   return (
