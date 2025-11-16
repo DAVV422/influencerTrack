@@ -5,7 +5,7 @@ import allPublications from '@/data/publications.json';
 
 // State management for demo purposes
 let influencers: Influencer[] = allInfluencers;
-let campaigns: Campaign[] = allCampaigns;
+let campaigns: Campaign[] = allCampaigns as Campaign[];
 let publications: Publication[] = allPublications;
 
 
