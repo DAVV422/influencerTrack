@@ -23,7 +23,7 @@ import type { NewCampaign } from './components/create-campaign-modal.type';
 
 // Asumo que tienes un tipo de Campaign (que incluye el 'id', 'name', 'socials', etc.)
 // Para este ejemplo, Campaign será el tipo retornado por getCampaigns y compatible con NewCampaign
-type Campaign = NewCampaign & { id: number }; // Asumo que Campaign es NewCampaign + un id
+type Campaign = NewCampaign & { id: string }; // Asumo que Campaign es NewCampaign + un id
 
 const platformIcons = {
   instagram: <Instagram className="h-5 w-5" />,
@@ -82,15 +82,16 @@ export default function CampaignsPage() {
   };
 
   // Función para manejar la adición de una nueva campaña
-  const handleAddCampaign = (newCampaign: NewCampaign) => {
+  const handleAddCampaign = (newCampaign: any) => {
+    console.log(newCampaign.campaign)
     // Debemos convertir NewCampaign a Campaign añadiendo el id
     const campaignWithId: Campaign = { 
         ...newCampaign, 
-        id: getNextCampaignId() // Usamos el ID generado
+        id: getNextCampaignId().toString() // Usamos el ID generado
     }; 
     
     // Añade la nueva campaña al principio de la lista
-    setCampaigns(prev => [campaignWithId, ...prev]); 
+    setCampaigns(prev => [newCampaign.campaign, ...prev]); 
   };
   
   // --- Renderizado del Componente ---
@@ -104,7 +105,8 @@ export default function CampaignsPage() {
         </TableCell>
     </TableRow>
   ) : (
-    campaigns.map((campaign) => (
+    console.log(campaigns),
+    campaigns?.map((campaign) => (
       <TableRow key={campaign.id}>
         <TableCell className="font-medium">{campaign.name}</TableCell>
         <TableCell>
@@ -174,12 +176,14 @@ export default function CampaignsPage() {
       </Card>
       
       {/* El Modal de Creación de Campaña */}
-      <CreateCampaignModal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        onAddCampaign={handleAddCampaign}
-        nextIdGenerator={getNextCampaignId} // Podrías eliminar esto y manejar el ID en handleAddCampaign
-      />
+      {isModalOpen && (
+        <CreateCampaignModal
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          onAddCampaign={handleAddCampaign}
+          nextIdGenerator={getNextCampaignId} // Esta prop parece redundante
+        />
+      )}
     </div>
   );
 }

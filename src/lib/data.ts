@@ -37,9 +37,9 @@ export const getCampaigns = async (): Promise<Campaign[]> => {
 }
 
 export const getCampaignById = async (id: string): Promise<Campaign | undefined> => {
-  const campaigns = await getCampaigns();
-  const idNum = id;
-  return campaigns.find(c => c.id === idNum);
+  const campaigns = await getCampaigns();  
+  console.log(campaigns)
+  return campaigns.find(c => c.id === id);
 }
 
 export const addCampaign = async (campaign: Campaign) => {

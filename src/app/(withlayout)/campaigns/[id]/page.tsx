@@ -64,6 +64,8 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
     const fetchData = async () => {
       setIsLoading(true);
       console.log("Iniciando fetch...");
+
+      console.log(id)
       
       try {
         const [fetchedCampaign, fetchedAllInfluencers, fetchedCampaignInfluencers, fetchedPublications] = await Promise.all([
@@ -77,6 +79,8 @@ export default function CampaignDetailPage({ params }: { params: Promise<{ id: s
           notFound();
           return;
         }
+
+        console.log(fetchedCampaign)
 
         setCampaign(fetchedCampaign);        
         setAllInfluencers(fetchedAllInfluencers);

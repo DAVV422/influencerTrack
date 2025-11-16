@@ -1,5 +1,126 @@
 [
   {
+    "id": "12",
+    "name": "test12",
+    "description": "test12",
+    "startDate": "2020-05-09",
+    "endDate": "2025-11-30",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "11",
+    "name": "test11",
+    "description": "tes11",
+    "startDate": "2024-04-04",
+    "endDate": "2024-05-05",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "10",
+    "name": "test10",
+    "description": "test120",
+    "startDate": "3000-02-04",
+    "endDate": "4000-03-02",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "9",
+    "name": "test 8",
+    "description": "test8",
+    "startDate": "2024-04-04",
+    "endDate": "2026-05-05",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "8",
+    "name": "test 7",
+    "description": "test7 ",
+    "startDate": "2025-04-04",
+    "endDate": "2025-05-05",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "7",
+    "name": "test 6",
+    "description": "test 7",
+    "startDate": "2024-04-04",
+    "endDate": "2025-04-04",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "6",
+    "name": "test 5",
+    "description": "test5",
+    "startDate": "2025-04-02",
+    "endDate": "2025-04-03",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "5",
+    "name": "test 3",
+    "description": "test 3",
+    "startDate": "2025-04-02",
+    "endDate": "2025-10-10",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "4",
+    "name": "test 4",
+    "description": "test 4",
+    "startDate": "2025-11-14",
+    "endDate": "2025-11-30",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "3",
+    "name": "Test 2",
+    "description": "test 2",
+    "startDate": "2025-11-08",
+    "endDate": "2025-11-29",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
+    "id": "2",
+    "name": "Test",
+    "description": "Campaña Test",
+    "startDate": "2025-11-23",
+    "endDate": "2025-11-30",
+    "socials": [
+      "tiktok"
+    ],
+    "influencerIds": []
+  },
+  {
     "id": "1",
     "name": "Summer Style 2024",
     "description": "Campaña de moda veraniega con las últimas tendencias",
@@ -11,7 +132,8 @@
       "tiktok"
     ],
     "influencerIds": [
-      "1"
+      "1",
+      "1763304434763"
     ]
   }
 ]

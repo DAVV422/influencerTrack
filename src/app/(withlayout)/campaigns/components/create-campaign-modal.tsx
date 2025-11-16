@@ -71,7 +71,7 @@ export function CreateCampaignModal({
       return;
     }
 
-    const newCampaignId = nextIdGenerator();
+    const newCampaignId = nextIdGenerator().toString();
 
     const newCampaign: Campaign = {
       id: newCampaignId,
@@ -79,7 +79,7 @@ export function CreateCampaignModal({
       description,
       startDate,
       endDate,
-      socials: selectedSocials,
+      socials: selectedSocials || [],
       influencerIds: [],
     };
 

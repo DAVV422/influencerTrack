@@ -9,7 +9,7 @@ export type SocialPlatform = 'instagram' | 'tiktok' | 'facebook';
 
 // Estructura de la Campaña que se crea desde el modal
 export interface NewCampaign {
-  id: number;
+  id: string;
   name: string;
   description: string;
   startDate: string; 
