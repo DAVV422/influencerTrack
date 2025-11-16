@@ -38,7 +38,8 @@ export const getCampaigns = async (): Promise<Campaign[]> => {
 
 export const getCampaignById = async (id: string): Promise<Campaign | undefined> => {
   const campaigns = await getCampaigns();
-  return campaigns.find(c => c.id === id);
+  const idNum = Number(id);
+  return campaigns.find(c => c.id === idNum);
 }
 
 export const addCampaign = async (campaign: Campaign) => {
@@ -68,7 +69,32 @@ export const addInfluencersToCampaign = async (campaignId: string, influencerIds
   return updateCampaign(campaignId, { influencerIds: updatedIds });
 }
 
+export const getInfluencersByCampaignId = async (campaignId: string): Promise<Influencer[]> => {
+  // 1. Obtener la campaña para obtener los IDs de los influencers
+  const campaign = await getCampaignById(campaignId);
 
+  if (!campaign) {
+    // Si la campaña no existe, no hay influencers que devolver.
+    return []; 
+  }
+
+  const influencerIds = campaign.influencerIds;
+
+  // Si no hay IDs de influencers, retornar un array vacío.
+  if (influencerIds.length === 0) {
+    return [];
+  }
+
+  // 2. Obtener todos los influencers (usando la función existente)
+  const allInfluencers = await getInfluencers();
+
+  // 3. Filtrar y mapear los influencers que coincidan con los IDs de la campaña
+  const campaignInfluencers = allInfluencers.filter(influencer => 
+    influencerIds.includes(influencer.id)
+  );
+
+  return campaignInfluencers;
+}
 
 // Publications
 export const getPublications = async (): Promise<Publication[]> => {

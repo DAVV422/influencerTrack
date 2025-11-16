@@ -23,11 +23,11 @@ import {
 import Image from 'next/image';
 import { ArrowLeft, PlusCircle } from 'lucide-react';
 import type { Influencer } from '@/lib/types';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { AddInfluencerToCampaignModal } from './components/add-influencer-to-campaign-modal';
 
-function getInfluencerStats(influencerId: string, campaignId: string) {
-  const allPublications = getPublications();
+async function getInfluencerStats(influencerId: string, campaignId: string) {
+  const allPublications = await getPublications();
   const influencerPublications = allPublications.filter(
     (p) => p.influencerId === influencerId && p.campaignId === campaignId
   );
@@ -48,36 +48,68 @@ const formatNumber = (num: number) => {
   return num.toString();
 };
 
-export default function CampaignDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const campaign = getCampaignById(params.id);
-  console.log(params.id)
-  console.log(campaign)
-  const allInfluencers = getInfluencers();
-  
+export default function CampaignDetailPage({ params }: { params: { id: string } }) {
+  const [campaign, setCampaign] = useState<typeof getCampaignById | null>(null);
+  const [allInfluencers, setAllInfluencers] = useState<Influencer[]>([]);
+  const [campaignInfluencers, setCampaignInfluencers] = useState<Influencer[]>([]);
+  const [allPublications, setAllPublications] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [campaignInfluencers, setCampaignInfluencers] = useState<Influencer[]>(
-    () => getInfluencersByCampaignId(params.id)
-  );
 
-  if (!campaign) {
-    notFound();
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const [fetchedCampaign, fetchedAllInfluencers, fetchedCampaignInfluencers, fetchedPublications] = await Promise.all([
+        getCampaignById(params.id),
+        getInfluencers(),
+        getInfluencersByCampaignId(params.id),
+        getPublications(),
+      ]);
 
-  const handleAddInfluencers = (influencerIds: string[]) => {
-    addInfluencersToCampaign(campaign.id, influencerIds);
-    setCampaignInfluencers(getInfluencersByCampaignId(params.id));
+      if (!fetchedCampaign) {
+        notFound();
+        return;
+      }
+
+      setCampaign(fetchedCampaign);
+      setAllInfluencers(fetchedAllInfluencers);
+      setCampaignInfluencers(fetchedCampaignInfluencers);
+      setAllPublications(fetchedPublications);
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [params.id]);
+
+  const handleAddInfluencers = async (influencerIds: string[]) => {
+    if (!campaign) return;
+    await addInfluencersToCampaign(campaign.id, influencerIds);
+    const updatedCampaignInfluencers = await getInfluencersByCampaignId(params.id);
+    setCampaignInfluencers(updatedCampaignInfluencers);
   };
-  
+
   const availableInfluencers = useMemo(() => {
-    const campaignInfluencerIds = new Set(campaignInfluencers.map(i => i.id));
-    return allInfluencers.filter(
-      (inf) => !campaignInfluencerIds.has(inf.id)
-    );
+    const campaignIds = new Set(campaignInfluencers.map((i) => i.id));
+    return allInfluencers.filter((i) => !campaignIds.has(i.id));
   }, [allInfluencers, campaignInfluencers]);
+
+  const getInfluencerStats = (influencerId: string) => {
+    const influencerPublications = allPublications.filter(
+      (p) => p.influencerId === influencerId && p.campaignId === campaign?.id
+    );
+    return influencerPublications.reduce(
+      (acc, pub) => {
+        acc.likes += pub.likes;
+        acc.comments += pub.comments;
+        acc.shares += pub.shares;
+        return acc;
+      },
+      { likes: 0, comments: 0, shares: 0, publications: influencerPublications.length }
+    );
+  };
+
+  if (isLoading) return <p>Cargando campaña...</p>;
+  if (!campaign) return <p>Campaña no encontrada</p>;
 
   return (
     <div className="space-y-6">
@@ -96,53 +128,60 @@ export default function CampaignDetailPage({
           </Button>
         }
       />
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Influencer</TableHead>
-                <TableHead>Total Likes</TableHead>
-                <TableHead>Total Comentarios</TableHead>
-                <TableHead>Total Compartidos</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {campaignInfluencers.map((influencer) => {
-                const stats = getInfluencerStats(influencer.id, campaign.id);
-                return (
-                  <TableRow key={influencer.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={influencer.imageUrl}
-                          alt={influencer.name}
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                          data-ai-hint="person portrait"
-                        />
-                        <span className="font-medium">{influencer.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatNumber(stats.likes)}</TableCell>
-                    <TableCell>{formatNumber(stats.comments)}</TableCell>
-                    <TableCell>{formatNumber(stats.shares)}</TableCell>
-                    <TableCell className="text-right">
-                      <Button asChild variant="outline" size="sm">
-                        <Link href={`/campaigns/${campaign.id}/${influencer.id}`}>
-                          View Posts
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      {campaign.influencerIds.length === 0 ? (
+        <p className="text-gray-500 py-4 text-center">
+          No influencers added to this campaign yet.
+        </p>
+      ) : (
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Influencer</TableHead>
+                  <TableHead>Total Likes</TableHead>
+                  <TableHead>Total Comentarios</TableHead>
+                  <TableHead>Total Compartidos</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {campaignInfluencers.map((influencer) => {
+                  const stats = getInfluencerStats(influencer.id, campaign.id);
+                  return (
+                    <TableRow key={influencer.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Image
+                            src={influencer.imageUrl}
+                            alt={influencer.name}
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                            data-ai-hint="person portrait"
+                          />
+                          <span className="font-medium">{influencer.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{formatNumber(stats.likes)}</TableCell>
+                      <TableCell>{formatNumber(stats.comments)}</TableCell>
+                      <TableCell>{formatNumber(stats.shares)}</TableCell>
+                      <TableCell className="text-right">
+                        <Button asChild variant="outline" size="sm">
+                          <Link href={`/campaigns/${campaign.id}/${influencer.id}`}>
+                            View Posts
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+      
       <AddInfluencerToCampaignModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
