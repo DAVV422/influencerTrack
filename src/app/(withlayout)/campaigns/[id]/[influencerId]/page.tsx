@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import {
   getCampaignById,
@@ -15,21 +16,42 @@ export default function InfluencerCampaignPostsPage({
 }: {
   params: { id: string; influencerId: string };
 }) {
-  const campaign = getCampaignById(params.id);
-  const influencer = getInfluencerById(params.influencerId);
+  const [campaign, setCampaign] = useState<any | null>(null);
+  const [influencer, setInfluencer] = useState<any | null>(null);
+  const [initialPublications, setInitialPublications] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!campaign || !influencer) {
-    notFound();
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
 
-  const initialPublications = getPublicationsByCampaignAndInfluencer(
-    params.id,
-    params.influencerId
-  );
+      const [fetchedCampaign, fetchedInfluencer, fetchedPublications] =
+        await Promise.all([
+          getCampaignById(params.id),
+          getInfluencerById(params.influencerId),
+          getPublicationsByCampaignAndInfluencer(params.id, params.influencerId),
+        ]);
+
+      if (!fetchedCampaign || !fetchedInfluencer) {
+        notFound();
+        return;
+      }
+
+      setCampaign(fetchedCampaign);
+      setInfluencer(fetchedInfluencer);
+      setInitialPublications(fetchedPublications);
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [params.id, params.influencerId]);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (!campaign || !influencer) return <p>Not found</p>;
 
   return (
     <div className="space-y-6">
-       <Button asChild variant="outline" size="sm" className="gap-2">
+      <Button asChild variant="outline" size="sm" className="gap-2">
         <Link href={`/campaigns/${campaign.id}`}>
           <ArrowLeft className="h-4 w-4" />
           Back to {campaign.name}

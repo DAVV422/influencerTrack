@@ -20,9 +20,10 @@ import {
   addInfluencersToCampaign,
   getInfluencers,
 } from '@/lib/data';
+import { use } from 'react'; 
 import Image from 'next/image';
 import { ArrowLeft, PlusCircle } from 'lucide-react';
-import type { Influencer } from '@/lib/types';
+import type { Campaign, Influencer } from '@/lib/types';
 import { useState, useMemo, useEffect } from 'react';
 import { AddInfluencerToCampaignModal } from './components/add-influencer-to-campaign-modal';
 
@@ -48,43 +49,62 @@ const formatNumber = (num: number) => {
   return num.toString();
 };
 
-export default function CampaignDetailPage({ params }: { params: { id: string } }) {
-  const [campaign, setCampaign] = useState<typeof getCampaignById | null>(null);
+export default function CampaignDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+
+  const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [allInfluencers, setAllInfluencers] = useState<Influencer[]>([]);
   const [campaignInfluencers, setCampaignInfluencers] = useState<Influencer[]>([]);
   const [allPublications, setAllPublications] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const [fetchedCampaign, fetchedAllInfluencers, fetchedCampaignInfluencers, fetchedPublications] = await Promise.all([
-        getCampaignById(params.id),
-        getInfluencers(),
-        getInfluencersByCampaignId(params.id),
-        getPublications(),
-      ]);
+      console.log("Iniciando fetch...");
+      
+      try {
+        const [fetchedCampaign, fetchedAllInfluencers, fetchedCampaignInfluencers, fetchedPublications] = await Promise.all([
+          getCampaignById(id),
+          getInfluencers(),
+          getInfluencersByCampaignId(id),
+          getPublications(),
+        ]);
 
-      if (!fetchedCampaign) {
-        notFound();
-        return;
+        console.log(fetchedCampaign)
+
+        if (!fetchedCampaign) {
+          notFound();
+          return;
+        }
+
+        console.log("ingresa");
+        setCampaign(fetchedCampaign);
+        console.log("setCampaign1");
+        setAllInfluencers(fetchedAllInfluencers);
+        console.log("setAll");
+        setCampaignInfluencers(fetchedCampaignInfluencers);
+        console.log("setCampaign");
+        setAllPublications(fetchedPublications);
+        console.log("termina");
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+        console.log("Loading false");
       }
-
-      setCampaign(fetchedCampaign);
-      setAllInfluencers(fetchedAllInfluencers);
-      setCampaignInfluencers(fetchedCampaignInfluencers);
-      setAllPublications(fetchedPublications);
-      setIsLoading(false);
     };
 
     fetchData();
-  }, [params.id]);
+  }, [id]);
 
   const handleAddInfluencers = async (influencerIds: string[]) => {
     if (!campaign) return;
-    await addInfluencersToCampaign(campaign.id, influencerIds);
-    const updatedCampaignInfluencers = await getInfluencersByCampaignId(params.id);
+    await addInfluencersToCampaign(campaign.id.toString(), influencerIds);
+    const updatedCampaignInfluencers = await getInfluencersByCampaignId(id);
     setCampaignInfluencers(updatedCampaignInfluencers);
   };
 
@@ -147,7 +167,7 @@ export default function CampaignDetailPage({ params }: { params: { id: string } 
               </TableHeader>
               <TableBody>
                 {campaignInfluencers.map((influencer) => {
-                  const stats = getInfluencerStats(influencer.id, campaign.id);
+                  const stats = getInfluencerStats(influencer.id);
                   return (
                     <TableRow key={influencer.id}>
                       <TableCell>

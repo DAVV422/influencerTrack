@@ -27,7 +27,7 @@ export interface Publication {
 }
 
 export interface Campaign {
-  id: number;
+  id: string;
   name: string;
   // Nuevos campos
   description: string;
