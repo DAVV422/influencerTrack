@@ -7,6 +7,10 @@
       "instagram": "https://instagram.com/elena_styles",
       "tiktok": "https://tiktok.com/@elena_styles"
     },
+    "clic_descargas": {
+      "instagram": 4,
+      "tiktok": 6
+    },
     "followers": 1200000,
     "likes": 5400000,
     "posts": 350,
@@ -21,6 +25,7 @@
       "facebook": "https://facebook.com/marcus.travels"
     },
     "followers": 850000,
+    "clic_descargas": {},
     "likes": 3200000,
     "posts": 210,
     "reach": 6.5
@@ -33,6 +38,9 @@
       "tiktok": "https://tiktok.com/@sophie.foodie"
     },
     "followers": 2500000,
+    "clic_descargas": {
+      "instagram": 10
+    },
     "likes": 12000000,
     "posts": 500,
     "reach": 12.3
@@ -47,6 +55,9 @@
     },
     "followers": 500000,
     "likes": 1800000,
+    "clic_descargas": {
+      "tiktok": 1
+    },
     "posts": 150,
     "reach": 5.2
   },
@@ -59,6 +70,10 @@
       "tiktok": "https://tiktok.com/@chloe.fit",
       "facebook": "https://facebook.com/chloe.fit"
     },
+    "clic_descargas": {
+      "facebook": 4,
+      "tiktok": 6
+    },
     "followers": 1800000,
     "likes": 7800000,
     "posts": 420,
@@ -70,6 +85,10 @@
     "imageUrl": "https://picsum.photos/seed/6/200/200",
     "socials": {
       "instagram": "https://instagram.com/liam.explores"
+    },
+    "clic_descargas": {
+      "instagram": 5,
+      "facebook": 6
     },
     "followers": 650000,
     "likes": 2100000,

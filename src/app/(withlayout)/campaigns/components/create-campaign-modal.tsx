@@ -18,10 +18,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import type { SocialPlatform, NewCampaign, CreateCampaignModalProps } from './create-campaign-modal.type'; // Ajusta la ruta
 
-// Asumo que tienes una función similar para guardar en tu capa de datos
-// import { addCampaign as saveCampaign } from '@/lib/data';
-import { NewCampaign } from './create-campaign-modal.type';
-
 // Simulación de la función de guardar campaña para que el código compile
 const saveCampaign = (campaign: NewCampaign) => {
     console.log('Campaign saved:', campaign);
@@ -117,16 +113,16 @@ export function CreateCampaignModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Campaign</DialogTitle>
+          <DialogTitle>Crear Nueva Campaña</DialogTitle>
           <DialogDescription>
-            Enter the campaign name and select the social networks for the outreach.
+            Ingrese el nombre de la campaña y seleccione las redes sociales para la campaña.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {/* Campo Nombre de Campaña */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="campaignName" className="text-right">
-              Name
+              Nombre
             </Label>
             <Input 
               id="campaignName" 
@@ -138,7 +134,7 @@ export function CreateCampaignModal({
           </div>
 
           <div className="grid grid-cols-4 items-start gap-4">
-            <Label htmlFor="description" className="text-right pt-2">Description</Label>
+            <Label htmlFor="description" className="text-right pt-2">Descripción</Label>
             <Textarea 
               id="description" 
               value={description} 
@@ -150,7 +146,7 @@ export function CreateCampaignModal({
 
           {/* Campos Fechas */}
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="startDate" className="text-right">Start Date</Label>
+            <Label htmlFor="startDate" className="text-right">Fecha Inicio</Label>
             <Input 
               id="startDate" 
               type="date"
@@ -160,7 +156,7 @@ export function CreateCampaignModal({
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="endDate" className="text-right">End Date</Label>
+            <Label htmlFor="endDate" className="text-right">Fecha Fin</Label>
             <Input 
               id="endDate" 
               type="date"
@@ -173,7 +169,7 @@ export function CreateCampaignModal({
           {/* Selección de Redes Sociales */}
           <div className="grid grid-cols-4 items-start gap-4 pt-2">
             <Label className="text-right pt-2">
-              Networks
+              Redes Sociales
             </Label>
             <div className="col-span-3 space-y-3">
               {availableSocials.map((platform) => (
@@ -196,7 +192,7 @@ export function CreateCampaignModal({
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleSubmit}>
-            Create Campaign
+            Crear Campaña
           </Button>
         </DialogFooter>
       </DialogContent>

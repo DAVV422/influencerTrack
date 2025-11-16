@@ -54,6 +54,8 @@ export default function CampaignDetailPage({
   params: { id: string };
 }) {
   const campaign = getCampaignById(params.id);
+  console.log(params.id)
+  console.log(campaign)
   const allInfluencers = getInfluencers();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -101,8 +103,8 @@ export default function CampaignDetailPage({
               <TableRow>
                 <TableHead>Influencer</TableHead>
                 <TableHead>Total Likes</TableHead>
-                <TableHead>Total Comments</TableHead>
-                <TableHead>Total Shares</TableHead>
+                <TableHead>Total Comentarios</TableHead>
+                <TableHead>Total Compartidos</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>

@@ -241,16 +241,16 @@ export function AddPublicationModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>Add Publication</DialogTitle>
+          <DialogTitle>Añadir Publicación</DialogTitle>
           <DialogDescription>
-            Enter the URL or upload a CSV file containing multiple publication URLs.
+            Ingrese la URL o cargue un archivo CSV con las URLs de las publicaciones.
           </DialogDescription>
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="url"><LinkIcon className="h-4 w-4 mr-2" /> Single URL</TabsTrigger>
-                <TabsTrigger value="csv"><FileUp className="h-4 w-4 mr-2" /> Upload CSV</TabsTrigger>
+                <TabsTrigger value="url"><LinkIcon className="h-4 w-4 mr-2" /> Url único</TabsTrigger>
+                <TabsTrigger value="csv"><FileUp className="h-4 w-4 mr-2" /> Cargar CSV</TabsTrigger>
             </TabsList>
 
             <TabsContent value="url" className="pt-4">
@@ -269,7 +269,7 @@ export function AddPublicationModal({
 
             <TabsContent value="csv" className="pt-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="csv-file" className="text-right">CSV File</Label>
+                    <Label htmlFor="csv-file" className="text-right">Archivo CSV</Label>
                     <Input 
                         id="csv-file" 
                         type="file" 
@@ -280,7 +280,7 @@ export function AddPublicationModal({
                 </div>
                 {file && (
                     <p className="text-sm text-muted-foreground mt-2 text-center col-span-4">
-                        File selected: **{file.name}**
+                        Archivo Seleccionado: **{file.name}**
                     </p>
                 )}
             </TabsContent>
@@ -291,12 +291,12 @@ export function AddPublicationModal({
             {isProcessing ? (
                 <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
+                    Procesando...
                 </>
             ) : activeTab === 'url' ? (
-                'Add and Fetch Metrics'
+                'Añadir y obtener métricas'
             ) : (
-                'Upload and Fetch Metrics'
+                'Cargar y obtener métricas'
             )}
           </Button>
         </DialogFooter>

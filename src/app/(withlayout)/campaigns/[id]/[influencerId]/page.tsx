@@ -36,7 +36,7 @@ export default function InfluencerCampaignPostsPage({
         </Link>
       </Button>
 
-      <PageHeader title={`${influencer.name}'s Posts`} />
+      <PageHeader title={`Posts ${influencer.name}`} />
 
       <PublicationList
         initialPublications={initialPublications}

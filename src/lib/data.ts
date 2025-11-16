@@ -33,8 +33,6 @@ export const addInfluencersToCampaign = (campaignId: string, influencerIds: stri
         campaign.influencerIds.push(influencerId);
       }
     });
-    // In a real DB, you'd update the campaign record.
-    // Here we're updating the in-memory array.
     campaigns = campaigns.map(c => c.id === campaignId ? campaign : c);
     return true;
   }
